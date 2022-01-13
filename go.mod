@@ -18,7 +18,7 @@ require (
 	github.com/swaggo/gin-swagger v1.2.0
 	github.com/swaggo/swag v1.6.5
 	github.com/unknwon/com v1.0.1
-	go.mongodb.org/mongo-driver v1.4.6
+	go.mongodb.org/mongo-driver v1.5.1
 	golang.org/x/tools v0.0.0-20200313205530-4303120df7d8 // indirect
 	gorm.io/driver/postgres v1.2.3
 	gorm.io/driver/sqlite v1.2.6
