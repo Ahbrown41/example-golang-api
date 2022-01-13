@@ -1,0 +1,203 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This API is used for providing a taskpaper API for taskpaper data",
+        "title": "Taskpaper API",
+        "contact": {
+            "name": "Alex Brown",
+            "email": "alex@redantelope.com"
+        },
+        "license": {
+            "name": "Apache 2.0"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:27017",
+    "basePath": "/api/v1",
+    "paths": {
+        "/papers/": {
+            "get": {
+                "description": "Gets all papers in DB",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "papers"
+                ],
+                "summary": "Gets all papers",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/taskpaper.Item"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Creates a taskpaper document",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "papers"
+                ],
+                "summary": "Creates paper document based on RAW taskpaper",
+                "parameters": [
+                    {
+                        "description": "New Paper",
+                        "name": "papers",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "New Paper ID(Hex)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/papers/:pid": {
+            "get": {
+                "description": "Gets a given Paper in a Paper BSON format",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "papers"
+                ],
+                "summary": "Gets a given Paper JSON",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/taskpaper.Item"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Updates a paper given an paper ID and payload",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "papers"
+                ],
+                "summary": "Updates a papers document",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Paper to update",
+                        "name": "pid",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Updated Paper",
+                        "name": "papers",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/taskpaper.Item"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Updated Paper",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Deletes an papers given an papers ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "papers"
+                ],
+                "summary": "Deletes a taskpaper papers",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Task to delete",
+                        "name": "pid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Updated Task"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "taskpaper.Item": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "description": "Identifier",
+                    "type": "string"
+                },
+                "children": {
+                    "description": "Children is the list of all items that are indented by at least one tab\nbelow the current item.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/taskpaper.Item"
+                    }
+                },
+                "content": {
+                    "description": "Content is the item text, not including the \"- \" prefix for Kind=Task or\nthe \":\" suffix for Kind=Project.",
+                    "type": "string"
+                },
+                "indent": {
+                    "description": "Indent is the amount of additional tabs the original item was indented by\nif it's more than the single tab that establishes it as a child of the\nprevious line item.",
+                    "type": "integer"
+                },
+                "kind": {
+                    "description": "Kind is the item kind.",
+                    "type": "string"
+                },
+                "tags": {
+                    "description": "Holds all tags",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}

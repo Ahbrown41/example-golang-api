@@ -1,0 +1,143 @@
+basePath: /api/v1
+definitions:
+  taskpaper.Item:
+    properties:
+      _id:
+        description: Identifier
+        type: string
+      children:
+        description: |-
+          Children is the list of all items that are indented by at least one tab
+          below the current item.
+        items:
+          $ref: '#/definitions/taskpaper.Item'
+        type: array
+      content:
+        description: |-
+          Content is the item text, not including the "- " prefix for Kind=Task or
+          the ":" suffix for Kind=Project.
+        type: string
+      indent:
+        description: |-
+          Indent is the amount of additional tabs the original item was indented by
+          if it's more than the single tab that establishes it as a child of the
+          previous line item.
+        type: integer
+      kind:
+        description: Kind is the item kind.
+        type: string
+      tags:
+        description: Holds all tags
+        items:
+          type: string
+        type: array
+    type: object
+host: localhost:27017
+info:
+  contact:
+    email: alex@redantelope.com
+    name: Alex Brown
+  description: This API is used for providing a entities API for entities data
+  license:
+    name: Apache 2.0
+  title: Taskpaper API
+  version: "1.0"
+paths:
+  /papers/:
+    get:
+      consumes:
+      - application/json
+      description: Gets all entities in DB
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/taskpaper.Item'
+            type: array
+      summary: Gets all entities
+      tags:
+      - entities
+    post:
+      consumes:
+      - application/json
+      description: Creates a entities document
+      parameters:
+      - description: New Paper
+        in: body
+        name: entities
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: New Paper ID(Hex)
+          schema:
+            type: string
+      summary: Creates paper document based on RAW entities
+      tags:
+      - entities
+  /papers/:pid:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes an entities given an entities ID
+      parameters:
+      - description: Task to delete
+        in: path
+        name: pid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated Task
+      summary: Deletes a entities entities
+      tags:
+      - entities
+    get:
+      consumes:
+      - application/json
+      description: Gets a given Paper in a Paper BSON format
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/taskpaper.Item'
+      summary: Gets a given Paper JSON
+      tags:
+      - entities
+    put:
+      consumes:
+      - application/json
+      description: Updates a paper given an paper ID and payload
+      parameters:
+      - description: Paper to update
+        in: path
+        name: pid
+        required: true
+        type: string
+      - description: Updated Paper
+        in: body
+        name: entities
+        required: true
+        schema:
+          $ref: '#/definitions/taskpaper.Item'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated Paper
+          schema:
+            type: string
+      summary: Updates a entities document
+      tags:
+      - entities
+swagger: "2.0"
