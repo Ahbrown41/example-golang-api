@@ -37,3 +37,7 @@ func (s EntityService) Create(entity Entity) (Entity, error) {
 	}
 	return entity, nil
 }
+
+func (s EntityService) Validate(entity Entity) (Entity, error) {
+
+}
