@@ -10,6 +10,7 @@
 package models
 
 import (
+	"github.com/asaskevich/govalidator"
 	"gorm.io/gorm"
 	"log"
 )
@@ -45,4 +46,13 @@ func (c *Connection) Disconnect() {
 		log.Fatal(err)
 	}
 	sqlDB.Close()
+}
+
+// Validate - validates that a struc is correct
+func (c *Connection) Validate(obj struct{}) (bool, error) {
+	result, err := govalidator.ValidateStruct(obj)
+	if err != nil {
+		return false, err
+	}
+	return result, nil
 }

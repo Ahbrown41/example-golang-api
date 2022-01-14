@@ -16,7 +16,7 @@ import (
 )
 
 func TestConnectDB(t *testing.T) {
-	dialect := sqlite.Open("gorm.db")
+	dialect := sqlite.Open("connection_test.db")
 	conn := New(dialect)
 	assert.NotNil(t, conn)
 	err := conn.Connect()

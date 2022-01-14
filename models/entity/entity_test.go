@@ -1,68 +1,63 @@
 package entity
 
 import (
-	"context"
-	"fmt"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/mongo-driver/bson"
-	"log"
+	"gorm.io/driver/sqlite"
 	"os"
-	"reference-golang-svc/domainx"
-	"reference-golang-svc/repos"
-	"reflect"
+	"reference-golang-svc/models"
 	"testing"
+	"time"
 )
 
-var svc PaperService
-var paper1Obj *domainx.Item
+var db *models.Connection
 
 func TestMain(t *testing.M) {
-	repos.InitDB("mongodb://localhost:27017", "tasks-test")
-	createPaper()
-	paper1Obj, _ = svc.GetByID(_id)
+	setup()
 	code := t.Run()
-	defer repos.DisconnectDB()
-	clearTable()
+	shutdown()
 	os.Exit(code)
 }
 
-func createPaper() {
-	svc := PaperService{}
-	id, err := svc.Create(paper1)
-	if err != nil {
-		log.Fatal(err)
-	}
-	_id = id
-	fmt.Printf("Created object with id: %s\n", _id)
+func setup() {
+	dialect := sqlite.Open("entity_test.db")
+	conn := models.New(dialect)
+	db = conn
+	db.Connect()
+
+	// Migrate what is necessary for test
+	db.DB().AutoMigrate(
+		Entity{},
+	)
 }
 
-func TestFind(t *testing.T) {
-	paper, err := svc.GetByID(_id)
-	assert.Equal(t, err, nil, "Error not nil")
-	assert.NotEqual(t, nil, paper, "They should not be equal")
-	assert.Equal(t, true, reflect.DeepEqual(paper, paper1Obj), fmt.Sprintf("Paper: %v != %v", paper, paper1Obj))
+func shutdown() {
+	defer db.Disconnect()
 }
 
-func TestFetch(t *testing.T) {
-	options := FetchOptions{
-		Limit: 100,
-		Page:  0,
-	}
-	papers, err := svc.Fetch(options)
-	assert.Equal(t, err, nil, "Error not nil")
-	assert.NotEqual(t, nil, papers, "They should not be equal")
-	assert.True(t, len(papers) == 1, "They should be greater than zero but was: %d", len(papers))
-	for _, paper := range papers {
-		assert.Equal(t, true, reflect.DeepEqual(paper, paper1Obj), fmt.Sprintf("Paper: %v != %v", paper, paper1Obj))
-	}
+func CreateEntity(t *testing.T) {
+	svc := New(db.DB())
+	entities1, err := svc.All(FetchOptions{Page: 1, Limit: 10})
+	assert.Nil(t, err)
+	id, err := svc.Create(Entity{
+		Name:  "Entity X",
+		Value: 43,
+		Date:  time.Time{},
+	})
+	assert.Nil(t, err)
+	assert.Greater(t, id, 0, "New ID ==0")
+	entities2, err := svc.All(FetchOptions{Page: 1, Limit: 10})
+	assert.Nil(t, err)
+	assert.Greater(t, len(*entities2), len(*entities1), "Only 0 entities")
 }
 
-func TestDelete(t *testing.T) {
-	cnt, err := svc.Delete(_id)
-	assert.Equal(t, err, nil, "Error not nil")
-	assert.NotEqual(t, cnt, 0, "They should not be equal")
-}
-
-func clearTable() {
-	repos.GetCollection("entities").DeleteMany(context.TODO(), bson.M{})
+func TestAll(t *testing.T) {
+	svc := New(db.DB())
+	svc.Create(Entity{
+		Name:  "Entity 1",
+		Value: 43,
+		Date:  time.Time{},
+	})
+	entities, err := svc.All(FetchOptions{Page: 1, Limit: 10})
+	assert.Nil(t, err)
+	assert.Greater(t, len(*entities), 0, "Only 0 entities")
 }

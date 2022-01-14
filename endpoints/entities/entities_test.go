@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -18,7 +17,6 @@ import (
 
 const baseURL = "/api/v1/entities"
 
-var paperID primitive.ObjectID
 var router *gin.Engine
 
 const paper1 = `My Project:

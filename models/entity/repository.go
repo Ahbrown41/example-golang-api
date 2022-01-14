@@ -1,17 +1,7 @@
 package entity
 
-import (
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"reference-golang-svc/domainx"
-)
-
-//Repo : Database repo for DomainX Operations
+//Repo : Database repo for Domain Operations
 type EntityRepository interface {
-	// TASKS
-	Fetch(opt FetchOptions) ([]string, error)
-	GetByID(paperID int64) (string, error)
-	GetBySourceID(paperID int64) (*domainx.Item, error)
-	Create(o string) (int64, error)
-	Update(o string) (string, error)
-	Delete(paperID primitive.ObjectID) (bool, error)
+	All(opt FetchOptions) ([]string, error)
+	Create(entity Entity) (Entity, error)
 }

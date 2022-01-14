@@ -17,11 +17,11 @@ func Router() *gin.Engine {
 	// Setup API Mappings
 	pv1 := router.Group("/api/v1/entities")
 	{
-		pv1.POST("/", domain.CreateEntity)
+		//pv1.POST("/", domain.CreateEntity)
 		pv1.GET("/", domain.AllEntities)
-		pv1.GET("/:pid", domain.GetEntityByID)
-		pv1.PUT("/:pid", domain.UpdateEntity)
-		pv1.DELETE("/:pid", domain.DeleteEntity)
+		//pv1.GET("/:pid", domain.GetEntityByID)
+		//pv1.PUT("/:pid", domain.UpdateEntity)
+		//pv1.DELETE("/:pid", domain.DeleteEntity)
 	}
 
 	// Setup Swagger Endpoint

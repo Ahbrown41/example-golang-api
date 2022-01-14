@@ -16,9 +16,9 @@ import (
 
 type Entity struct {
 	gorm.Model
-	Name  string    `json:"name"`
-	Value int32     `json:"value"`
-	Date  time.Time `json:"date"`
+	Name  string    `json:"name" gorm:"size:255;index:unique;check:name == ''"`
+	Value int32     `json:"value" gorm:"NOT NULL"`
+	Date  time.Time `json:"date" gorm:"NOT NULL"`
 }
 
 func Migrate(db *gorm.DB) {
