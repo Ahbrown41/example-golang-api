@@ -21,6 +21,7 @@ func main() {
 	dbName := osVariable("db_name", "public")
 	dbHost := osVariable("db_host", "localhost")
 
+	// Setup Database
 	dbUri := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", dbHost, username, dbName, password)
 	conn := models.New(postgres.Open(dbUri))
 
@@ -30,6 +31,9 @@ func main() {
 	}
 	defer conn.Disconnect()
 
+	models.Migrate(conn.DB())
+
+	// Setup Router
 	r := router.Router()
 	log.Printf("Starting server on the port http://0.0.0.0:XXXX...")
 	r.Run()
