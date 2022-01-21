@@ -10,17 +10,35 @@
 package entity
 
 import (
+	"api-reference-golang/models"
 	"gorm.io/gorm"
 	"time"
 )
 
 type Entity struct {
 	gorm.Model
-	Name  string    `json:"name" gorm:"size:255;index:unique;check:name == ''"`
-	Value int32     `json:"value" gorm:"NOT NULL"`
-	Date  time.Time `json:"date" gorm:"NOT NULL"`
+	Name  string        `json:"name"  gorm:"unique_index" validate:"required"`
+	Value int32         `json:"value" gorm:"not null" validate:"gte=0,lte=100"`
+	Date  time.Time     `json:"date"  gorm:"not null" validate:"required"`
+	Items []EntityItems `json:"items"`
+}
+
+type EntityItems struct {
+	gorm.Model
+	ItemName string `json:"item-name" gorm:"unique_index" validate:"required"`
+	EntityID int    `json:"-"`
+	Entity   Entity `json:"entity,omitempty"`
+}
+
+func (u *Entity) BeforeCreate(tx *gorm.DB) (err error) {
+	return models.Validate(u)
+}
+
+func (u *Entity) BeforeUpdate(tx *gorm.DB) (err error) {
+	return models.Validate(u)
 }
 
 func Migrate(db *gorm.DB) {
 	db.AutoMigrate(Entity{})
+	db.AutoMigrate(EntityItems{})
 }

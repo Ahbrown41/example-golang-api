@@ -7,10 +7,13 @@
  * Dissemination or reproduction of this information is strictly forbidden unless prior written permission is obtained from a duly authorized representative of Wawa, Inc.
  */
 
-package models
+package migrate
 
-import "reference-golang-svc/models/entity"
+import (
+	"api-reference-golang/models/entity"
+	"gorm.io/gorm"
+)
 
 func Migrate(db *gorm.DB) {
-	db.AutoMigrate(entity.Entity{})
+	entity.Migrate(db)
 }

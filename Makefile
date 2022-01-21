@@ -10,17 +10,29 @@ help: ## - Show help message
 .PHONY: build
 build:
 	@printf "\033[32m\xE2\x9c\x93 Build image\n\033[0m"
-	@export DOCKER_CONTENT_TRUST=1 && docker build -f Dockerfile -t reference-golang-svc .
+	@export DOCKER_CONTENT_TRUST=1 && docker build -f Dockerfile -t api-reference-golang .
 
 .PHONY: build-no-cache
 build-no-cache:
 	@printf "\033[32m\xE2\x9c\x93 Build image no cache\n\033[0m"
-	@export DOCKER_CONTENT_TRUST=1 && docker build --no-cache -f Dockerfile -t reference-golang-svc .
+	@export DOCKER_CONTENT_TRUST=1 && docker build --no-cache -f Dockerfile -t api-reference-golang .
+
+.PHONY: backend_deploy
+backend_deploy: ## - Deploy backend stack
+	@docker stack deploy --compose-file ./stack.yml backend-compose-stack
+
+.PHONY: backend_undeploy
+backend_undeploy: ## - Undeploy backend stack
+	@docker stack rm backend-compose-stack
 
 .PHONY: ls
-ls: ## - List 'reference-golang-svc' docker images
-	@docker image ls reference-golang-svc
+ls: ## - List 'api-reference-golang' docker images
+	@docker image ls api-reference-golang
+
+.PHONY: test
+test: ## - Tests project recursively
+	@go test ./...
 
 .PHONY: run
 run:
-	@docker run --network host -p 8080:8080 --name reference-golang-svc --env-file ./.env reference-golang-svc:latest
+	@docker run --network host -p 8080:8080 --name api-reference-golang --env-file ./.env api-reference-golang:latest

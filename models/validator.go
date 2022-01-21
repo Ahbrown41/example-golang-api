@@ -10,29 +10,42 @@
 package models
 
 import (
-	"github.com/asaskevich/govalidator"
-	"gorm.io/gorm"
+	"encoding/json"
+	"github.com/go-playground/validator/v10"
+	"github.com/rs/zerolog/log"
+	"reflect"
 )
 
-func validate(scope *gorm.DB.) {
-	if _, ok := scope.Get("gorm:update_column"); !ok {
-		if result, ok := scope.DB().Get(skipValidations); !(ok && result.(bool)) {
-			if !scope.HasError() {
-				scope.CallMethod("Validate")
-				if scope.Value != nil {
-					resource := scope.IndirectValue().Interface()
-					_, validatorErrors := govalidator.ValidateStruct(resource)
-					if validatorErrors != nil {
-						if errors, ok := validatorErrors.(govalidator.Errors); ok {
-							for _, err := range flatValidatorErrors(errors) {
-								scope.DB().AddError(formattedError(err, resource))
-							}
-						} else {
-							scope.DB().AddError(validatorErrors)
-						}
-					}
-				}
-			}
-		}
+// Global, caches struct validation info
+var val = validator.New()
+
+type Errors struct {
+	Struct string  `json:"struct"`
+	Errors []Error `json:"errors"`
+}
+
+type Error struct {
+	Field string `json:"struct"`
+	Error string `json:"error"`
+}
+
+func (m *Errors) Error() string {
+	bytes, err := json.Marshal(m)
+	if err != nil {
+		log.Printf("Cannot serialize error object: %s\n", err)
 	}
+	return string(bytes)
+}
+
+// Validate - validates that a struct is correct
+func Validate(obj interface{}) error {
+	err := val.Struct(obj)
+	if err != nil {
+		error := Errors{Struct: reflect.TypeOf(obj).String()}
+		for _, err := range err.(validator.ValidationErrors) {
+			error.Errors = append(error.Errors, Error{Field: err.Field(), Error: err.Error()})
+		}
+		return &error
+	}
+	return nil
 }

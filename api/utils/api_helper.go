@@ -7,30 +7,21 @@
  * Dissemination or reproduction of this information is strictly forbidden unless prior written permission is obtained from a duly authorized representative of Wawa, Inc.
  */
 
-package models
+package utils
 
 import (
-	"github.com/rs/zerolog/log"
-	"github.com/stretchr/testify/assert"
-	"gorm.io/driver/sqlite"
-	"os"
-	"testing"
+	"github.com/gin-gonic/gin"
 )
 
-const dbName = "connection_test.db"
-
-func TestConnectDB(t *testing.T) {
-	dialect := sqlite.Open(dbName)
-	conn := New(dialect)
-	assert.NotNil(t, conn)
-	err := conn.Connect()
-	assert.Nil(t, err)
-	defer conn.Disconnect()
+type ResponseData struct {
+	Status int
+	Meta   interface{}
+	Data   interface{}
 }
 
-func shutdown() {
-	e := os.Remove(dbName)
-	if e != nil {
-		log.Err(e)
-	}
+func RespondJSON(w *gin.Context, status int, payload interface{}) {
+	var res ResponseData
+	res.Status = status
+	res.Data = payload
+	w.JSON(200, res)
 }
