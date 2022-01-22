@@ -19,7 +19,7 @@ build-no-cache:
 
 .PHONY: backend_deploy
 backend_deploy: ## - Deploy backend stack
-	@docker stack deploy --compose-file ./backend-compose-stack.yml backend-compose-stack
+	@docker stack deploy --compose-file ./local/backend-compose-stack.yml backend-compose-stack
 
 .PHONY: backend_undeploy
 backend_undeploy: ## - Undeploy backend stack

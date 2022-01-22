@@ -1,0 +1,481 @@
+{
+	"info": {
+		"_postman_id": "317eb7ca-3352-41e6-8cd1-4fe4a9d008a7",
+		"name": "Reference Golang API",
+		"description": "Reference Golang API\n\nContact Support:\n Name: API Support\n Email: support@example.com",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "api/v1/entities",
+			"item": [
+				{
+					"name": "{id}",
+					"item": [
+						{
+							"name": "Gets an entity by ID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"pm.test(\"Check received ID\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.ID).to.greaterThan(0);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/entities/{{id}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"entities",
+										"{{id}}"
+									]
+								},
+								"description": "Gets an entity by ID"
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/v1/entities/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"entities",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"date\": \"fugiat proident cupidatat\",\n \"name\": \"dolor veniam labore\",\n \"createdAt\": \"Lorem ullamco sint i\",\n \"deletedAt\": {\n  \"time\": \"aliqua Lorem ea laboris non\",\n  \"valid\": false\n },\n \"id\": -60378902,\n \"items\": [\n  {\n   \"item-name\": \"ipsum tempor \",\n   \"createdAt\": \"in ut non\",\n   \"deletedAt\": {\n    \"time\": \"Lorem ipsum est\",\n    \"valid\": false\n   },\n   \"entity\": {\n    \"value\": \"<Circular reference to #/components/schemas/entity.Entity detected>\"\n   },\n   \"id\": -9406931,\n   \"updatedAt\": \"ipsum laboris\"\n  },\n  {\n   \"item-name\": \"quis ullamco laboris aute ipsum\",\n   \"createdAt\": \"laborum culpa esse ad\",\n   \"deletedAt\": {\n    \"time\": \"Ut\",\n    \"valid\": true\n   },\n   \"entity\": {\n    \"value\": \"<Circular reference to #/components/schemas/entity.Entity detected>\"\n   },\n   \"id\": 82435014,\n   \"updatedAt\": \"magna sunt reprehenderit\"\n  }\n ],\n \"updatedAt\": \"culpa\",\n \"value\": 24\n}"
+								},
+								{
+									"name": "Can not find ID",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/v1/entities/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"entities",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"data\": {},\n \"meta\": {},\n \"status\": -73118555\n}"
+								}
+							]
+						},
+						{
+							"name": "Updates an entity",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"ID\": 3,\n    \"CreatedAt\": \"2022-01-22T09:29:42.230683-05:00\",\n    \"UpdatedAt\": \"2022-01-22T09:29:42.230683-05:00\",\n    \"DeletedAt\": null,\n    \"name\": \"Fish Food Galore\",\n    \"value\": 23,\n    \"date\": \"2014-09-12T07:45:26.371-04:00\",\n    \"items\": [\n        {\n            \"item-name\": \"ipsum tempor \"\n        },\n        {\n            \"item-name\": \"quis ullamco laboris aute ipsum\"\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/entities/{{id}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"entities",
+										"{{id}}"
+									]
+								},
+								"description": "Updates an entity"
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/v1/entities/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"entities",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"date\": \"fugiat proident cupidatat\",\n \"name\": \"dolor veniam labore\",\n \"createdAt\": \"Lorem ullamco sint i\",\n \"deletedAt\": {\n  \"time\": \"aliqua Lorem ea laboris non\",\n  \"valid\": false\n },\n \"id\": -60378902,\n \"items\": [\n  {\n   \"item-name\": \"ipsum tempor \",\n   \"createdAt\": \"in ut non\",\n   \"deletedAt\": {\n    \"time\": \"Lorem ipsum est\",\n    \"valid\": false\n   },\n   \"entity\": {\n    \"value\": \"<Circular reference to #/components/schemas/entity.Entity detected>\"\n   },\n   \"id\": -9406931,\n   \"updatedAt\": \"ipsum laboris\"\n  },\n  {\n   \"item-name\": \"quis ullamco laboris aute ipsum\",\n   \"createdAt\": \"laborum culpa esse ad\",\n   \"deletedAt\": {\n    \"time\": \"Ut\",\n    \"valid\": true\n   },\n   \"entity\": {\n    \"value\": \"<Circular reference to #/components/schemas/entity.Entity detected>\"\n   },\n   \"id\": 82435014,\n   \"updatedAt\": \"magna sunt reprehenderit\"\n  }\n ],\n \"updatedAt\": \"culpa\",\n \"value\": 24\n}"
+								}
+							]
+						},
+						{
+							"name": "Deletes an entity",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/entities/{{id}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"entities",
+										"{{id}}"
+									]
+								},
+								"description": "Deletes an entity"
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/v1/entities/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"entities",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"date\": \"fugiat proident cupidatat\",\n \"name\": \"dolor veniam labore\",\n \"createdAt\": \"Lorem ullamco sint i\",\n \"deletedAt\": {\n  \"time\": \"aliqua Lorem ea laboris non\",\n  \"valid\": false\n },\n \"id\": -60378902,\n \"items\": [\n  {\n   \"item-name\": \"ipsum tempor \",\n   \"createdAt\": \"in ut non\",\n   \"deletedAt\": {\n    \"time\": \"Lorem ipsum est\",\n    \"valid\": false\n   },\n   \"entity\": {\n    \"value\": \"<Circular reference to #/components/schemas/entity.Entity detected>\"\n   },\n   \"id\": -9406931,\n   \"updatedAt\": \"ipsum laboris\"\n  },\n  {\n   \"item-name\": \"quis ullamco laboris aute ipsum\",\n   \"createdAt\": \"laborum culpa esse ad\",\n   \"deletedAt\": {\n    \"time\": \"Ut\",\n    \"valid\": true\n   },\n   \"entity\": {\n    \"value\": \"<Circular reference to #/components/schemas/entity.Entity detected>\"\n   },\n   \"id\": 82435014,\n   \"updatedAt\": \"magna sunt reprehenderit\"\n  }\n ],\n \"updatedAt\": \"culpa\",\n \"value\": 24\n}"
+								},
+								{
+									"name": "Can not find ID",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/v1/entities/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"entities",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"data\": {},\n \"meta\": {},\n \"status\": -73118555\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Gets all Entities",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Check received ID #1\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData[0].ID).to.greaterThan(0);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/entities/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"entities",
+								""
+							]
+						},
+						"description": "Gets all Entities in DB"
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/entities/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"entities",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "[\n {\n  \"date\": \"non Ut labore\",\n  \"name\": \"enim irure\",\n  \"createdAt\": \"reprehenderit\",\n  \"deletedAt\": {\n   \"time\": \"cupidatat fugiat consequat\",\n   \"valid\": true\n  },\n  \"id\": 85831084,\n  \"items\": [\n   {\n    \"item-name\": \"minim ut magna\",\n    \"createdAt\": \"eu in\",\n    \"deletedAt\": {\n     \"time\": \"exercitation\",\n     \"valid\": false\n    },\n    \"entity\": {\n     \"value\": \"<Circular reference to #/components/schemas/entity.Entity detected>\"\n    },\n    \"id\": 32247450,\n    \"updatedAt\": \"id consequat\"\n   },\n   {\n    \"item-name\": \"labore adipisicing mollit Ut Duis\",\n    \"createdAt\": \"proiden\",\n    \"deletedAt\": {\n     \"time\": \"cillum laborum ea officia labore\",\n     \"valid\": true\n    },\n    \"entity\": {\n     \"value\": \"<Circular reference to #/components/schemas/entity.Entity detected>\"\n    },\n    \"id\": -71857287,\n    \"updatedAt\": \"dolor ad Lorem\"\n   }\n  ],\n  \"updatedAt\": \"occaecat adipisicing\",\n  \"value\": 1\n },\n {\n  \"date\": \"do ad ex ut\",\n  \"name\": \"nulla minim nisi aliqua\",\n  \"createdAt\": \"cillum sunt labore Duis fugiat\",\n  \"deletedAt\": {\n   \"time\": \"ea enim ad cupidatat proident\",\n   \"valid\": true\n  },\n  \"id\": 12928960,\n  \"items\": [\n   {\n    \"item-name\": \"mollit tempor aliqua\",\n    \"createdAt\": \"ut dolor cillum anim quis\",\n    \"deletedAt\": {\n     \"time\": \"nulla exercitation mollit eu\",\n     \"valid\": true\n    },\n    \"entity\": {\n     \"value\": \"<Circular reference to #/components/schemas/entity.Entity detected>\"\n    },\n    \"id\": 44278817,\n    \"updatedAt\": \"sed ea\"\n   },\n   {\n    \"item-name\": \"laboris id\",\n    \"createdAt\": \"non aliquip\",\n    \"deletedAt\": {\n     \"time\": \"cu\",\n     \"valid\": false\n    },\n    \"entity\": {\n     \"value\": \"<Circular reference to #/components/schemas/entity.Entity detected>\"\n    },\n    \"id\": -80471038,\n    \"updatedAt\": \"irure laborum ex id quis\"\n   }\n  ],\n  \"updatedAt\": \"mollit adipisicing consectetur elit\",\n  \"value\": 15\n }\n]"
+						}
+					]
+				},
+				{
+					"name": "Creates new Entity",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Check created ID\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.ID).to.greaterThan(0);",
+									"    pm.collectionVariables.set(\"id\", jsonData.ID);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"date\": \"2014-09-12T11:45:26.371Z\",\n    \"name\": \"dolor veniam labore\",\n    \"value\": 23,\n    \"items\": [\n        {\n            \"item-name\": \"ipsum tempor \"\n        },\n        {\n            \"item-name\": \"quis ullamco laboris aute ipsum\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/entities/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"entities",
+								""
+							]
+						},
+						"description": "Creates new Entity"
+					},
+					"response": [
+						{
+							"name": "New Entity",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/entities/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"entities",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"date\": \"fugiat proident cupidatat\",\n \"name\": \"dolor veniam labore\",\n \"createdAt\": \"Lorem ullamco sint i\",\n \"deletedAt\": {\n  \"time\": \"aliqua Lorem ea laboris non\",\n  \"valid\": false\n },\n \"id\": -60378902,\n \"items\": [\n  {\n   \"item-name\": \"ipsum tempor \",\n   \"createdAt\": \"in ut non\",\n   \"deletedAt\": {\n    \"time\": \"Lorem ipsum est\",\n    \"valid\": false\n   },\n   \"entity\": {\n    \"value\": \"<Circular reference to #/components/schemas/entity.Entity detected>\"\n   },\n   \"id\": -9406931,\n   \"updatedAt\": \"ipsum laboris\"\n  },\n  {\n   \"item-name\": \"quis ullamco laboris aute ipsum\",\n   \"createdAt\": \"laborum culpa esse ad\",\n   \"deletedAt\": {\n    \"time\": \"Ut\",\n    \"valid\": true\n   },\n   \"entity\": {\n    \"value\": \"<Circular reference to #/components/schemas/entity.Entity detected>\"\n   },\n   \"id\": 82435014,\n   \"updatedAt\": \"magna sunt reprehenderit\"\n  }\n ],\n \"updatedAt\": \"culpa\",\n \"value\": 24\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "id",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

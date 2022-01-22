@@ -20,13 +20,13 @@ type Entity struct {
 	Name  string       `json:"name"  gorm:"unique_index" validate:"required"`
 	Value int32        `json:"value" gorm:"not null" validate:"gte=0,lte=100"`
 	Date  time.Time    `json:"date"  gorm:"not null" validate:"required"`
-	Items []EntityItem `json:"items"`
+	Items []EntityItem `json:"items" gorm:"constraint:OnDelete:CASCADE;"`
 }
 
 type EntityItem struct {
-	gorm.Model `json:"-"`
-	ItemName   string `json:"item-name" gorm:"unique_index" validate:"required"`
-	EntityID   int    `json:"-"`
+	gorm.Model
+	ItemName string `json:"item-name" gorm:"unique_index" validate:"required"`
+	EntityID int    `json:"-"`
 }
 
 func (u *Entity) BeforeCreate(tx *gorm.DB) (err error) {

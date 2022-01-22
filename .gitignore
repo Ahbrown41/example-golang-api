@@ -6,6 +6,8 @@
 *.dylib
 .idea
 api-reference-golang
+tests/libs
+local/grafana/data
 
 **/*.db
 

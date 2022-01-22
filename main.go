@@ -29,7 +29,7 @@ import (
 func main() {
 	username := osVariable("db_user", "postgres")
 	password := osVariable("db_pass", "fixme")
-	dbName := osVariable("db_name", "public")
+	dbName := osVariable("db_name", "entity")
 	dbHost := osVariable("db_host", "localhost")
 	webPort := osVariable("PORT", "8080")
 	debug, _ := strconv.ParseBool(osVariable("DEBUG", "false"))

@@ -50,7 +50,8 @@ func (s EntityService) Create(entity *Entity) (*Entity, error) {
 // Delete : Deletes Entity by ID
 func (s EntityService) Delete(id uint) error {
 	var entity Entity
-	result := s.con.DB().Delete(&entity, id)
+	entity.ID = id
+	result := s.con.DB().Select("Items").Delete(&entity)
 	if result.Error != nil {
 		return result.Error
 	}
