@@ -19,15 +19,11 @@ build-no-cache:
 
 .PHONY: backend_deploy
 backend_deploy: ## - Deploy backend stack
-	@docker stack deploy --compose-file ./local/backend-compose-stack.yml backend-compose-stack
+	@cd local && docker stack deploy --compose-file ./backend-compose-stack.yml backend-compose-stack
 
 .PHONY: backend_undeploy
 backend_undeploy: ## - Undeploy backend stack
 	@docker stack rm backend-compose-stack
-
-.PHONY: ls
-ls: ## - List 'api-reference-golang' docker images
-	@docker image ls api-reference-golang
 
 .PHONY: test
 test: ## - Tests project recursively
@@ -39,4 +35,4 @@ docs: ## - Generates swagger documentation
 
 .PHONY: run
 run:
-	@docker run --network host -p 8080:8080 --name api-reference-golang --env-file ./.env api-reference-golang:latest
+	@docker run -p 8080:8080 --name api-reference-golang --env-file ./.env api-reference-golang:latest

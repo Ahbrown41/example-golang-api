@@ -58,5 +58,7 @@ COPY --from=builder /dist/main /
 # Use an unprivileged user.
 USER appuser:appuser
 
+expose 8080
+
 # Command to run
 ENTRYPOINT ["/main"]

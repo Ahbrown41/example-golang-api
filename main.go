@@ -5,6 +5,7 @@ import (
 	"api-reference-golang/models"
 	"api-reference-golang/models/migrate"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"gorm.io/driver/postgres"
@@ -27,20 +28,24 @@ import (
 
 // @securityDefinitions.basic  BasicAuth
 func main() {
-	username := osVariable("db_user", "postgres")
-	password := osVariable("db_pass", "fixme")
-	dbName := osVariable("db_name", "entity")
-	dbHost := osVariable("db_host", "localhost")
+	username := osVariable("DB_USER", "postgres")
+	password := osVariable("DB_PASS", "fixme")
+	dbName := osVariable("DB_NAME", "entity")
+	dbHost := osVariable("DB_HOST", "localhost")
 	webPort := osVariable("PORT", "8080")
 	debug, _ := strconv.ParseBool(osVariable("DEBUG", "false"))
 
 	// Setup Logging
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
+
+	// Set Debugging
 	if debug {
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
+		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
 	}
-	log.Info().Msg("Service starting")
 
 	// Setup Database
 	dbUri := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", dbHost, username, dbName, password)
