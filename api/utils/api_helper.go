@@ -1,5 +1,5 @@
 /*
- * (c)  2022 – Wawa, Inc.
+ * (c)  2022 – Example, Inc.
  * All Rights Reserved.
  *
  * NOTICE:  All information contained herein is, and shall at all times remain, the sole and exclusive property of Wawa, Inc.
@@ -11,6 +11,8 @@ package utils
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
+	"strconv"
 )
 
 type ResponseData struct {
@@ -19,9 +21,19 @@ type ResponseData struct {
 	Data   interface{}
 }
 
-func RespondJSON(w *gin.Context, status int, payload interface{}) {
+func ParamInt64(c *gin.Context, param string) int64 {
+	int, err := strconv.ParseInt(c.Param(param), 10, 64)
+	if err != nil {
+		log.Warn().Msgf("Could not decode param: %s, error: %s", param, err)
+		return 0
+	} else {
+		return int
+	}
+}
+
+func RespondJSON(c *gin.Context, status int, payload interface{}) {
 	var res ResponseData
 	res.Status = status
 	res.Data = payload
-	w.JSON(200, res)
+	c.JSON(200, res)
 }

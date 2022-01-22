@@ -1,23 +1,24 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "This API is used for providing a taskpaper API for taskpaper data",
-        "title": "Taskpaper API",
+        "description": "Reference Golang API",
+        "title": "Reference Golang API",
         "contact": {
-            "name": "Alex Brown",
-            "email": "alex@redantelope.com"
+            "name": "API Support",
+            "email": "support@example.com"
         },
         "license": {
-            "name": "Apache 2.0"
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
         },
         "version": "1.0"
     },
-    "host": "localhost:27017",
+    "host": "localhost:8080",
     "basePath": "/api/v1",
     "paths": {
-        "/papers/": {
+        "/api/v1/entities/": {
             "get": {
-                "description": "Gets all papers in DB",
+                "description": "Gets all Entities in DB",
                 "consumes": [
                     "application/json"
                 ],
@@ -25,23 +26,23 @@
                     "application/json"
                 ],
                 "tags": [
-                    "papers"
+                    "Entities"
                 ],
-                "summary": "Gets all papers",
+                "summary": "Gets all Entities",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/taskpaper.Item"
+                                "$ref": "#/definitions/entity.Entity"
                             }
                         }
                     }
                 }
             },
             "post": {
-                "description": "Creates a taskpaper document",
+                "description": "Creates new Entity",
                 "consumes": [
                     "application/json"
                 ],
@@ -49,33 +50,33 @@
                     "application/json"
                 ],
                 "tags": [
-                    "papers"
+                    "Entities"
                 ],
-                "summary": "Creates paper document based on RAW taskpaper",
+                "summary": "Creates new Entity",
                 "parameters": [
                     {
-                        "description": "New Paper",
-                        "name": "papers",
+                        "description": "Entity to update",
+                        "name": "entity",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/entity.Entity"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "New Paper ID(Hex)",
+                        "description": "New Entity",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/entity.Entity"
                         }
                     }
                 }
             }
         },
-        "/papers/:pid": {
+        "/api/v1/entities/{id}": {
             "get": {
-                "description": "Gets a given Paper in a Paper BSON format",
+                "description": "Gets an entity by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -83,20 +84,35 @@
                     "application/json"
                 ],
                 "tags": [
-                    "papers"
+                    "Entities"
                 ],
-                "summary": "Gets a given Paper JSON",
+                "summary": "Gets an entity by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Entity ID to load",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/taskpaper.Item"
+                            "$ref": "#/definitions/entity.Entity"
+                        }
+                    },
+                    "404": {
+                        "description": "Can not find ID",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ResponseData"
                         }
                     }
                 }
             },
             "put": {
-                "description": "Updates a paper given an paper ID and payload",
+                "description": "Updates an entity",
                 "consumes": [
                     "application/json"
                 ],
@@ -104,38 +120,31 @@
                     "application/json"
                 ],
                 "tags": [
-                    "papers"
+                    "Entities"
                 ],
-                "summary": "Updates a papers document",
+                "summary": "Updates an entity",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Paper to update",
-                        "name": "pid",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Updated Paper",
-                        "name": "papers",
+                        "description": "Entity to update",
+                        "name": "entity",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/taskpaper.Item"
+                            "$ref": "#/definitions/entity.Entity"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Updated Paper",
+                        "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/entity.Entity"
                         }
                     }
                 }
             },
             "delete": {
-                "description": "Deletes an papers given an papers ID",
+                "description": "Deletes an entity",
                 "consumes": [
                     "application/json"
                 ],
@@ -143,61 +152,123 @@
                     "application/json"
                 ],
                 "tags": [
-                    "papers"
+                    "Entities"
                 ],
-                "summary": "Deletes a taskpaper papers",
+                "summary": "Deletes an entity",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Task to delete",
-                        "name": "pid",
+                        "description": "Entity ID to delete",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Updated Task"
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Entity"
+                        }
+                    },
+                    "404": {
+                        "description": "Can not find ID",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ResponseData"
+                        }
                     }
                 }
             }
         }
     },
     "definitions": {
-        "taskpaper.Item": {
+        "entity.Entity": {
             "type": "object",
+            "required": [
+                "date",
+                "name"
+            ],
             "properties": {
-                "_id": {
-                    "description": "Identifier",
+                "createdAt": {
                     "type": "string"
                 },
-                "children": {
-                    "description": "Children is the list of all items that are indented by at least one tab\nbelow the current item.",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/taskpaper.Item"
-                    }
-                },
-                "content": {
-                    "description": "Content is the item text, not including the \"- \" prefix for Kind=Task or\nthe \":\" suffix for Kind=Project.",
+                "date": {
                     "type": "string"
                 },
-                "indent": {
-                    "description": "Indent is the amount of additional tabs the original item was indented by\nif it's more than the single tab that establishes it as a child of the\nprevious line item.",
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "id": {
                     "type": "integer"
                 },
-                "kind": {
-                    "description": "Kind is the item kind.",
-                    "type": "string"
-                },
-                "tags": {
-                    "description": "Holds all tags",
+                "items": {
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "$ref": "#/definitions/entity.EntityItem"
                     }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "integer",
+                    "maximum": 100,
+                    "minimum": 0
                 }
             }
+        },
+        "entity.EntityItem": {
+            "type": "object",
+            "required": [
+                "item-name"
+            ],
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "item-name": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "gorm.DeletedAt": {
+            "type": "object",
+            "properties": {
+                "time": {
+                    "type": "string"
+                },
+                "valid": {
+                    "description": "Valid is true if Time is not NULL",
+                    "type": "boolean"
+                }
+            }
+        },
+        "utils.ResponseData": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "meta": {},
+                "status": {
+                    "type": "integer"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "BasicAuth": {
+            "type": "basic"
         }
     }
 }

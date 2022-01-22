@@ -12,17 +12,26 @@ import (
 	"strconv"
 )
 
-// @title Reference Golang API
-// @version 1.0
-// @description This API is an example on using Golang for an API
+// @title           Reference Golang API
+// @version         1.0
+// @description     Reference Golang API
 
-// @host localhost:27017
-// @BasePath /api/v1
+// @contact.name   API Support
+// @contact.email  support@example.com
+
+// @license.name  Apache 2.0
+// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host      localhost:8080
+// @BasePath  /api/v1
+
+// @securityDefinitions.basic  BasicAuth
 func main() {
 	username := osVariable("db_user", "postgres")
 	password := osVariable("db_pass", "fixme")
 	dbName := osVariable("db_name", "public")
 	dbHost := osVariable("db_host", "localhost")
+	webPort := osVariable("PORT", "8080")
 	debug, _ := strconv.ParseBool(osVariable("DEBUG", "false"))
 
 	// Setup Logging
@@ -39,20 +48,18 @@ func main() {
 
 	err := conn.Connect()
 	if err != nil {
-		log.Err(err)
-		log.Panic()
+		log.Panic().Err(err)
 	}
 	defer conn.Disconnect()
 
 	migrate.Migrate(conn.DB())
 
 	// Setup Router
-	r := api.Router()
+	r := api.Router(conn)
 	log.Printf("Starting server on the port http://0.0.0.0:XXXX...")
-	err = r.Run()
+	err = r.Run(fmt.Sprintf(":%s", webPort))
 	if err != nil {
-		log.Err(err)
-		log.Panic()
+		log.Panic().Err(err)
 	}
 }
 

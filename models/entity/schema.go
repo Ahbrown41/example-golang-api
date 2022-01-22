@@ -1,5 +1,5 @@
 /*
- * (c)  2022 – Wawa, Inc.
+ * (c)  2022 – Example, Inc.
  * All Rights Reserved.
  *
  * NOTICE:  All information contained herein is, and shall at all times remain, the sole and exclusive property of Wawa, Inc.
@@ -17,17 +17,16 @@ import (
 
 type Entity struct {
 	gorm.Model
-	Name  string        `json:"name"  gorm:"unique_index" validate:"required"`
-	Value int32         `json:"value" gorm:"not null" validate:"gte=0,lte=100"`
-	Date  time.Time     `json:"date"  gorm:"not null" validate:"required"`
-	Items []EntityItems `json:"items"`
+	Name  string       `json:"name"  gorm:"unique_index" validate:"required"`
+	Value int32        `json:"value" gorm:"not null" validate:"gte=0,lte=100"`
+	Date  time.Time    `json:"date"  gorm:"not null" validate:"required"`
+	Items []EntityItem `json:"items"`
 }
 
-type EntityItems struct {
-	gorm.Model
-	ItemName string `json:"item-name" gorm:"unique_index" validate:"required"`
-	EntityID int    `json:"-"`
-	Entity   Entity `json:"entity,omitempty"`
+type EntityItem struct {
+	gorm.Model `json:"-"`
+	ItemName   string `json:"item-name" gorm:"unique_index" validate:"required"`
+	EntityID   int    `json:"-"`
 }
 
 func (u *Entity) BeforeCreate(tx *gorm.DB) (err error) {
@@ -40,5 +39,5 @@ func (u *Entity) BeforeUpdate(tx *gorm.DB) (err error) {
 
 func Migrate(db *gorm.DB) {
 	db.AutoMigrate(Entity{})
-	db.AutoMigrate(EntityItems{})
+	db.AutoMigrate(EntityItem{})
 }

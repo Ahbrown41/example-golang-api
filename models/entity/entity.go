@@ -39,7 +39,7 @@ func (s EntityService) Get(id uint) (*Entity, error) {
 }
 
 // Create - Creates Entity
-func (s EntityService) Create(entity Entity) (Entity, error) {
+func (s EntityService) Create(entity *Entity) (*Entity, error) {
 	result := s.con.DB().Create(&entity)
 	if result.Error != nil {
 		return entity, result.Error
@@ -48,20 +48,20 @@ func (s EntityService) Create(entity Entity) (Entity, error) {
 }
 
 // Delete : Deletes Entity by ID
-func (s EntityService) Delete(id uint) (*Entity, error) {
+func (s EntityService) Delete(id uint) error {
 	var entity Entity
 	result := s.con.DB().Delete(&entity, id)
 	if result.Error != nil {
-		return nil, result.Error
+		return result.Error
 	}
-	return &entity, nil
+	return nil
 }
 
 // Update : Update Entity by ID
-func (s EntityService) Update(entity Entity) (*Entity, error) {
+func (s EntityService) Update(entity *Entity) (*Entity, error) {
 	result := s.con.DB().Updates(&entity)
 	if result.Error != nil {
 		return nil, result.Error
 	}
-	return &entity, nil
+	return entity, nil
 }

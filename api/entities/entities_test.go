@@ -1,6 +1,7 @@
 package entities
 
 import (
+	"api-reference-golang/api/utils"
 	"api-reference-golang/models"
 	"api-reference-golang/models/entity"
 	"encoding/json"
@@ -9,10 +10,7 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/sqlite"
-	"net/http"
-	"net/http/httptest"
 	"os"
-	"strings"
 	"testing"
 	"time"
 )
@@ -33,9 +31,6 @@ func TestMain(m *testing.M) {
 }
 
 func setup() {
-	router = gin.Default()
-	CreateRoutes(router)
-
 	// Open DB
 	dialect := sqlite.Open(dbName)
 	db = models.New(dialect)
@@ -43,6 +38,10 @@ func setup() {
 	if err != nil {
 		log.Err(err)
 	}
+
+	// Create Routes
+	router = gin.Default()
+	CreateRoutes(router, db)
 
 	// Migrate what is necessary for test
 	entity.Migrate(db.DB())
@@ -56,58 +55,106 @@ func shutdown() {
 	}
 }
 
-func createEntity(t *testing.T) entity.Entity {
-	svc := entity.New(db)
-	entity, err := svc.Create(entity.Entity{
-		Name:  "Entity X",
-		Value: 43,
-		Date:  time.Now(),
-		Items: []entity.EntityItems{entity.EntityItems{ItemName: "#1"}, entity.EntityItems{ItemName: "#2"}},
-	})
-	assert.Nil(t, err)
-	assert.Greater(t, entity.ID, uint(0), "New ID ==0")
-	return entity
-}
-
 func TestCreateEntity(t *testing.T) {
 	ety := entity.Entity{
 		Name:  "Entity X",
 		Value: 43,
 		Date:  time.Now(),
-		Items: []entity.EntityItems{entity.EntityItems{ItemName: "#1"}, entity.EntityItems{ItemName: "#2"}},
+		Items: []entity.EntityItem{entity.EntityItem{ItemName: "#1"}, entity.EntityItem{ItemName: "#2"}},
 	}
 	url := fmt.Sprintf("%s/", baseURL)
-	rr := executeReq(t, "POST", url, ety)
+	rr := utils.ExecuteReq(t, router, "POST", url, ety)
 	assert.Equal(t, 200, rr.Code, "Return code not 200")
-	var results []map[string]interface{}
-	json.Unmarshal(rr.Body.Bytes(), &results)
-	assert.NotNil(t, results, "Entity is nil")
-	assert.Greater(t, len(results), 0, "Error body does not equal 1")
+	var entity entity.Entity
+	err := json.Unmarshal(rr.Body.Bytes(), &entity)
+	assert.Nil(t, err)
+	assert.NotNil(t, entity, "Entity is nil")
+	assert.Greater(t, entity.ID, uint(0), "Entity is nil")
 }
 
-func executeReq(t *testing.T, verb string, url string, body interface{}) *httptest.ResponseRecorder {
-	rr := httptest.NewRecorder()
-	var bodyStr string
-	if body != struct{}{} {
-		bdy, err := json.Marshal(body)
-		if err != nil {
-			t.Errorf("Error marshalling object: %s", err)
-		} else {
-			bodyStr = string(bdy)
-		}
-	}
-	req, err := http.NewRequest(verb, url, strings.NewReader(bodyStr))
-	if err != nil {
-		t.Errorf("Error creating new request: %s", err)
-	}
-	router.ServeHTTP(rr, req)
-	checkStatus(t, rr)
-	return rr
+func TestAllEntities(t *testing.T) {
+	url := fmt.Sprintf("%s/", baseURL)
+	rr := utils.ExecuteReq(t, router, "GET", url, nil)
+	assert.Equal(t, 200, rr.Code, "Return code not 200")
+	var entities []entity.Entity
+	err := json.Unmarshal(rr.Body.Bytes(), &entities)
+	assert.Nil(t, err)
+	assert.NotNil(t, entities, "Entity is nil")
+	assert.Greater(t, len(entities), 0, "Entity is nil")
 }
 
-func checkStatus(t *testing.T, rr *httptest.ResponseRecorder) {
-	if status := rr.Code; status != http.StatusOK {
-		t.Errorf("handler returned wrong status code: got %v want %v",
-			status, http.StatusOK)
+func TestGetEntityByID(t *testing.T) {
+	url := fmt.Sprintf("%s/", baseURL)
+	rr := utils.ExecuteReq(t, router, "GET", url, nil)
+	assert.Equal(t, 200, rr.Code, "Return code not 200")
+	var entities []entity.Entity
+	err := json.Unmarshal(rr.Body.Bytes(), &entities)
+	assert.Nil(t, err)
+	assert.NotNil(t, entities, "Entity is nil")
+	assert.Greater(t, len(entities), 0, "Entity is nil")
+
+	for _, k := range entities {
+		url := fmt.Sprintf("%s/%d", baseURL, k.ID)
+		rr = utils.ExecuteReq(t, router, "GET", url, nil)
+		assert.Equal(t, 200, rr.Code, "Return code not 200")
+		var entity entity.Entity
+		err := json.Unmarshal(rr.Body.Bytes(), &entity)
+		assert.Nil(t, err)
+		assert.Greater(t, entity.ID, uint(0), "Entity is nil")
+		break
 	}
+}
+
+func TestUpdateEntity(t *testing.T) {
+	// Create Item
+	ety := entity.Entity{
+		Name:  "Entity X",
+		Value: 43,
+		Date:  time.Now(),
+		Items: []entity.EntityItem{entity.EntityItem{ItemName: "#1"}, entity.EntityItem{ItemName: "#2"}},
+	}
+	url := fmt.Sprintf("%s/", baseURL)
+	rr := utils.ExecuteReq(t, router, "POST", url, ety)
+	assert.Equal(t, 200, rr.Code, "Return code not 200")
+	var entity entity.Entity
+	err := json.Unmarshal(rr.Body.Bytes(), &entity)
+	assert.Nil(t, err)
+	assert.NotNil(t, entity, "Entity is nil")
+	assert.Greater(t, entity.ID, uint(0), "Entity is nil")
+
+	// Update Item
+	url = fmt.Sprintf("%s/%d", baseURL, entity.ID)
+	rr = utils.ExecuteReq(t, router, "PUT", url, ety)
+	assert.Equal(t, 200, rr.Code, "Return code not 200")
+	err = json.Unmarshal(rr.Body.Bytes(), &entity)
+	assert.Nil(t, err)
+	assert.NotNil(t, entity, "Entity is nil")
+	assert.Greater(t, entity.ID, uint(0), "Entity is nil")
+}
+
+func TestDeleteEntity(t *testing.T) {
+	// Create Item
+	ety := entity.Entity{
+		Name:  "Entity X",
+		Value: 43,
+		Date:  time.Now(),
+		Items: []entity.EntityItem{entity.EntityItem{ItemName: "#1"}, entity.EntityItem{ItemName: "#2"}},
+	}
+	url := fmt.Sprintf("%s/", baseURL)
+	rr := utils.ExecuteReq(t, router, "POST", url, ety)
+	assert.Equal(t, 200, rr.Code, "Return code not 200")
+	var entity entity.Entity
+	err := json.Unmarshal(rr.Body.Bytes(), &entity)
+	assert.Nil(t, err)
+	assert.NotNil(t, entity, "Entity is nil")
+	assert.Greater(t, entity.ID, uint(0), "Entity has 0 ID: %v", entity)
+
+	// Delete Item
+	url = fmt.Sprintf("%s/%d", baseURL, entity.ID)
+	rr = utils.ExecuteReq(t, router, "DELETE", url, ety)
+	assert.Equal(t, 200, rr.Code, "Return code not 200")
+	err = json.Unmarshal(rr.Body.Bytes(), &entity)
+	assert.Nil(t, err)
+	assert.NotNil(t, entity, "Entity is nil")
+	assert.Greater(t, entity.ID, uint(0), "Entity has 0 ID")
 }

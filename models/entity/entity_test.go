@@ -32,7 +32,7 @@ func setup() {
 	// Migrate what is necessary for test
 	db.DB().AutoMigrate(
 		Entity{},
-		EntityItems{},
+		EntityItem{},
 	)
 	svc = New(db)
 }
@@ -48,7 +48,7 @@ func shutdown() {
 func TestCreateEntity(t *testing.T) {
 	entities1, err := svc.All(FetchOptions{Page: 1, Limit: 10})
 	assert.Nil(t, err)
-	entity, err := svc.Create(Entity{
+	entity, err := svc.Create(&Entity{
 		Name:  "Entity X",
 		Value: 43,
 		Date:  time.Now(),
@@ -61,11 +61,11 @@ func TestCreateEntity(t *testing.T) {
 }
 
 func TestCreateEntityAndItems(t *testing.T) {
-	entity, err := svc.Create(Entity{
+	entity, err := svc.Create(&Entity{
 		Name:  "Entity X",
 		Value: 43,
 		Date:  time.Now(),
-		Items: []EntityItems{EntityItems{ItemName: "#1"}, EntityItems{ItemName: "#2"}},
+		Items: []EntityItem{EntityItem{ItemName: "#1"}, EntityItem{ItemName: "#2"}},
 	})
 	assert.Nil(t, err)
 	assert.Greater(t, entity.ID, uint(0), "New ID ==0")
@@ -74,7 +74,7 @@ func TestCreateEntityAndItems(t *testing.T) {
 }
 
 func TestAll(t *testing.T) {
-	entity, err := svc.Create(Entity{
+	entity, err := svc.Create(&Entity{
 		Name:  "Entity 1",
 		Value: 43,
 		Date:  time.Now(),
@@ -87,7 +87,7 @@ func TestAll(t *testing.T) {
 }
 
 func TestCreateEntityValidationError(t *testing.T) {
-	entity, err := svc.Create(Entity{
+	entity, err := svc.Create(&Entity{
 		Name:  "Entity X",
 		Value: 150,         //Invalid > 100
 		Date:  time.Time{}, //Invalid, empty date

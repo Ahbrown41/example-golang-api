@@ -1,5 +1,5 @@
 /*
- * (c)  2022 – Wawa, Inc.
+ * (c)  2022 – Example, Inc.
  * All Rights Reserved.
  *
  * NOTICE:  All information contained herein is, and shall at all times remain, the sole and exclusive property of Wawa, Inc.
@@ -10,8 +10,9 @@
 package models
 
 import (
+	"github.com/rs/zerolog/log"
 	"gorm.io/gorm"
-	"log"
+	"runtime/debug"
 )
 
 type Connection struct {
@@ -27,7 +28,7 @@ func New(dialect gorm.Dialector) *Connection {
 func (c *Connection) Connect() error {
 	client, err := gorm.Open(c.dialect, &gorm.Config{})
 	if err != nil {
-		panic("Failed to connect database")
+		log.Panic().Msg("Failed to connect database")
 	}
 	c.db = client
 	return nil
@@ -35,6 +36,14 @@ func (c *Connection) Connect() error {
 
 // DB - Get active DB connection
 func (c *Connection) DB() *gorm.DB {
+	if c == nil {
+		log.Error().Stack().Msg("Connection Null")
+		return nil
+	}
+	if c.db == nil {
+		log.Error().Stack().Msg("Connection DB Null")
+		debug.PrintStack()
+	}
 	return c.db
 }
 
@@ -42,7 +51,7 @@ func (c *Connection) DB() *gorm.DB {
 func (c *Connection) Disconnect() {
 	sqlDB, err := c.db.DB()
 	if err != nil {
-		log.Fatal(err)
+		log.Err(err)
 	}
 	sqlDB.Close()
 }
