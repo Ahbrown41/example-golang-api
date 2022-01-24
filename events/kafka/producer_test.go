@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/stretchr/testify/assert"
 	"os"
+	"strconv"
 	"testing"
 )
 
@@ -25,7 +26,7 @@ func TestMain(m *testing.M) {
 }
 
 func setup() {
-	prod = New("localhost:9092", "topic-A", "producer_test", "testMessage")
+	prod = New("localhost:9092", "topic-A", "producer_test")
 }
 
 func shutdown() {
@@ -35,6 +36,6 @@ func shutdown() {
 func TestProduceMsg(t *testing.T) {
 	msg := Test{id: uint(123), name: "Test", value: "TestVal"}
 	byt, _ := json.Marshal(msg)
-	err := prod.Notify("order-1", string(msg.id), byt)
+	err := prod.Notify("order-1", strconv.FormatUint(uint64(msg.id), 10), byt)
 	assert.Nil(t, err)
 }

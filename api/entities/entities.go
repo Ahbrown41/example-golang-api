@@ -121,8 +121,8 @@ func DeleteEntity(c *gin.Context) {
 	}
 }
 
-func CreateRoutes(router *gin.Engine, conn *models.Connection, prod *kafka.Producer) {
-	svc = entity.New(conn, prod)
+func CreateRoutes(router *gin.Engine, conn *models.Connection, kafka *kafka.Producer) {
+	svc = entity.New(conn, kafka)
 	pv1 := router.Group("/api/v1/entities")
 	{
 		pv1.POST("/", CreateEntity)

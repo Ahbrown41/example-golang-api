@@ -11,13 +11,13 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-func Router(conn *models.Connection, prod *kafka.Producer) *gin.Engine {
+func Router(conn *models.Connection, kafka *kafka.Producer) *gin.Engine {
 	router := gin.Default()
 
 	setupMonitoring(router)
 
 	// Setup API Mappings
-	entities.CreateRoutes(router, conn, prod)
+	entities.CreateRoutes(router, conn, kafka)
 
 	// Setup Swagger Endpoint
 	url := ginSwagger.URL("http://localhost:8080/swagger/doc.json") // The url pointing to API definition

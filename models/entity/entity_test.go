@@ -1,6 +1,7 @@
 package entity
 
 import (
+	"api-reference-golang/events/kafka"
 	"api-reference-golang/models"
 	"encoding/json"
 	"github.com/rs/zerolog/log"
@@ -31,7 +32,7 @@ func setup() {
 	db = conn
 	db.Connect()
 
-	notifier := NewEntityNotifier("localhost:9092", "entities")
+	kafka := kafka.New("localhost:9092", "entities", "api-reference-golang")
 
 	// Migrate what is necessary for test
 	db.DB().AutoMigrate(
@@ -39,7 +40,7 @@ func setup() {
 		EntityItem{},
 	)
 
-	svc = New(db, notifier)
+	svc = New(db, kafka)
 }
 
 func shutdown() {

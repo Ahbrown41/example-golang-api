@@ -5,7 +5,6 @@ import (
 	"api-reference-golang/events/kafka"
 	"api-reference-golang/models"
 	"api-reference-golang/models/entity"
-	"api-reference-golang/models/notify"
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -35,7 +34,7 @@ func TestMain(m *testing.M) {
 func setup() {
 	// Open DB
 	dialect := sqlite.Open(dbName)
-	db = notify.New(dialect)
+	db = models.New(dialect)
 	err := db.Connect()
 	if err != nil {
 		log.Err(err)

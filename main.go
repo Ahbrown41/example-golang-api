@@ -61,10 +61,10 @@ func main() {
 	migrate.Migrate(db.DB())
 
 	// Setup Kafka
-	msg := kafka.New(kafkaUrl, "entity_events", "example/api-reference-golang", "")
+	kafka := kafka.New(kafkaUrl, "entity_events", "example/api-reference-golang")
 
 	// Setup Router
-	r := api.Router(db, msg)
+	r := api.Router(db, kafka)
 	log.Printf("Starting server on the port http://0.0.0.0:XXXX...")
 	err = r.Run(fmt.Sprintf(":%s", webPort))
 	if err != nil {

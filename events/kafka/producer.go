@@ -9,19 +9,18 @@ import (
 )
 
 type Producer struct {
-	write     *kafka.Writer
-	source    string
-	eventType string
+	write  *kafka.Writer
+	source string
 }
 
 // New - Creates kafka
-func New(addr string, topic string, source string, eventType string) *Producer {
+func New(addr string, topic string, source string) *Producer {
 	write := &kafka.Writer{
 		Addr:     kafka.TCP(addr),
 		Topic:    topic,
 		Balancer: &kafka.LeastBytes{},
 	}
-	return &Producer{write: write, source: source, eventType: eventType}
+	return &Producer{write: write, source: source}
 }
 
 // Disconnect - Disconnects kafka connection
@@ -32,12 +31,12 @@ func (c *Producer) Disconnect() {
 }
 
 // Produce - Produces Kafka Message
-func (c *Producer) Notify(eventName string, id string, evt []byte) error {
+func (c *Producer) Notify(eventType string, id string, evt []byte) error {
 	// Build CloudEvent
 	event := cloudevents.New()
 	event.SetID(id)
 	event.SetSource(c.source)
-	event.SetType(c.eventType)
+	event.SetType(eventType)
 	event.SetData(cloudevents.ApplicationJSON, evt)
 
 	json, err := json2.Marshal(event)

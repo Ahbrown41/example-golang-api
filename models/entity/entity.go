@@ -1,15 +1,17 @@
 package entity
 
 import (
+	"api-reference-golang/events/kafka"
 	"api-reference-golang/models"
 	"api-reference-golang/models/notify"
 	"encoding/json"
+	"strconv"
 )
 
 type service struct {
-	repo Repository
-	con  *models.Connection
-	note notify.Notifier
+	repo     Repository
+	con      *models.Connection
+	notifier notify.Notifier
 }
 
 type Repository interface {
@@ -25,8 +27,9 @@ type FetchOptions struct {
 	Page  int
 }
 
-func New(con *models.Connection, notify notify.Notifier) Repository {
-	return service{con: con, note: notify}
+func New(con *models.Connection, kafka *kafka.Producer) Repository {
+	notifier := NewEntityNotifier(kafka)
+	return service{con: con, notifier: &notifier}
 }
 
 // All : Returns all Entities
@@ -59,7 +62,7 @@ func (s service) Create(entity *Entity) (*Entity, error) {
 	if err != nil {
 		return nil, err
 	}
-	s.note.Notify("createEntity", string(entity.ID), msg)
+	s.notifier.Notify("createEntity", strconv.FormatUint(uint64(entity.ID), 10), msg)
 	return entity, nil
 }
 
@@ -78,7 +81,7 @@ func (s service) Delete(id uint) error {
 	if err != nil {
 		return err
 	}
-	s.note.Notify("deleteEntity", string(entity.ID), msg)
+	s.notifier.Notify("deleteEntity", strconv.FormatUint(uint64(entity.ID), 10), msg)
 	return nil
 }
 
@@ -92,6 +95,6 @@ func (s service) Update(entity *Entity) (*Entity, error) {
 	if err != nil {
 		return nil, err
 	}
-	s.note.Notify("updateEntity", string(entity.ID), msg)
+	s.notifier.Notify("updateEntity", strconv.FormatUint(uint64(entity.ID), 10), msg)
 	return entity, nil
 }

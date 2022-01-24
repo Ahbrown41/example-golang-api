@@ -12,6 +12,6 @@ func NewEntityNotifier(producer *kafka.Producer) EntityNotifier {
 	return EntityNotifier{producer: producer}
 }
 
-func (c *EntityNotifier) notify(eventName string, id string, evt []byte) error {
-	c.notify(eventName, id, evt)
+func (c *EntityNotifier) Notify(eventName string, id string, event []byte) error {
+	return c.producer.Notify(eventName, id, event)
 }

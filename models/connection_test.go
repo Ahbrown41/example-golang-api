@@ -1,7 +1,6 @@
 package models
 
 import (
-	"api-reference-golang/models/notify"
 	"github.com/rs/zerolog/log"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/sqlite"
@@ -20,7 +19,7 @@ func TestMain(m *testing.M) {
 
 func TestConnectDB(t *testing.T) {
 	dialect := sqlite.Open(dbName)
-	conn := notify.New(dialect)
+	conn := New(dialect)
 	assert.NotNil(t, conn)
 	err := conn.Connect()
 	assert.Nil(t, err)
