@@ -3,7 +3,7 @@
 
 const asn1 = exports;
 
-asn1.bignum = require('bn.js');
+asn1.bignum = require('../../../../../node_modules/bn.js/lib/bn');
 
 asn1.define = require('./asn1/api').define;
 asn1.base = require('./asn1/base');
@@ -1088,7 +1088,7 @@ constants.der = require('./der');
 
 const inherits = require('inherits');
 
-const bignum = require('bn.js');
+const bignum = require('../../../../../node_modules/bn.js/lib/bn');
 const DecoderBuffer = require('../base/buffer').DecoderBuffer;
 const Node = require('../base/node');
 
@@ -10340,7 +10340,7 @@ exports.listCiphers = exports.getCiphers = getCiphers
 
 },{"browserify-aes/browser":23,"browserify-aes/modes":34,"browserify-des":39,"browserify-des/modes":40,"evp_bytestokey":103}],39:[function(require,module,exports){
 var CipherBase = require('cipher-base')
-var des = require('des.js')
+var des = require('../../../../../node_modules/des.js/lib/des')
 var inherits = require('inherits')
 var Buffer = require('safe-buffer').Buffer
 
@@ -10418,7 +10418,7 @@ exports['des-ede'] = {
 
 },{}],41:[function(require,module,exports){
 (function (Buffer){(function (){
-var BN = require('bn.js')
+var BN = require('../../../../../node_modules/bn.js/lib/bn')
 var randomBytes = require('randombytes')
 
 function blind (priv) {
@@ -10722,7 +10722,7 @@ var Buffer = require('safe-buffer').Buffer
 var createHmac = require('create-hmac')
 var crt = require('browserify-rsa')
 var EC = require('elliptic').ec
-var BN = require('bn.js')
+var BN = require('../../../../../node_modules/bn.js/lib/bn')
 var parseKeys = require('parse-asn1')
 var curves = require('./curves.json')
 
@@ -10864,7 +10864,7 @@ module.exports.makeKey = makeKey
 },{"./curves.json":44,"bn.js":18,"browserify-rsa":41,"create-hmac":71,"elliptic":85,"parse-asn1":145,"safe-buffer":183}],47:[function(require,module,exports){
 // much of this based on https://github.com/indutny/self-signed/blob/gh-pages/lib/rsa.js
 var Buffer = require('safe-buffer').Buffer
-var BN = require('bn.js')
+var BN = require('../../../../../node_modules/bn.js/lib/bn')
 var EC = require('elliptic').ec
 var parseKeys = require('parse-asn1')
 var curves = require('./curves.json')
@@ -16074,7 +16074,7 @@ function objectToString(o) {
 },{"buffer":64}],67:[function(require,module,exports){
 (function (Buffer){(function (){
 var elliptic = require('elliptic')
-var BN = require('bn.js')
+var BN = require('../../../../../node_modules/bn.js/lib/bn')
 
 module.exports = function createECDH (curve) {
   return new ECDH(curve)
@@ -17176,7 +17176,7 @@ exports.createDiffieHellman = exports.DiffieHellman = createDiffieHellman
 }).call(this)}).call(this,require("buffer").Buffer)
 },{"./lib/dh":81,"./lib/generatePrime":82,"./lib/primes.json":83,"buffer":64}],81:[function(require,module,exports){
 (function (Buffer){(function (){
-var BN = require('bn.js');
+var BN = require('../../../../../node_modules/bn.js/lib/bn');
 var MillerRabin = require('miller-rabin');
 var millerRabin = new MillerRabin();
 var TWENTYFOUR = new BN(24);
@@ -17347,7 +17347,7 @@ var randomBytes = require('randombytes');
 module.exports = findPrime;
 findPrime.simpleSieve = simpleSieve;
 findPrime.fermatTest = fermatTest;
-var BN = require('bn.js');
+var BN = require('../../../../../node_modules/bn.js/lib/bn');
 var TWENTYFOUR = new BN(24);
 var MillerRabin = require('miller-rabin');
 var millerRabin = new MillerRabin();
@@ -17504,7 +17504,7 @@ elliptic.eddsa = require('./elliptic/eddsa');
 },{"../package.json":101,"./elliptic/curve":88,"./elliptic/curves":91,"./elliptic/ec":92,"./elliptic/eddsa":95,"./elliptic/utils":99,"brorand":19}],86:[function(require,module,exports){
 'use strict';
 
-var BN = require('bn.js');
+var BN = require('../../../../../node_modules/bn.js/lib/bn');
 var utils = require('../utils');
 var getNAF = utils.getNAF;
 var getJSF = utils.getJSF;
@@ -17888,7 +17888,7 @@ BasePoint.prototype.dblp = function dblp(k) {
 'use strict';
 
 var utils = require('../utils');
-var BN = require('bn.js');
+var BN = require('../../../../../node_modules/bn.js/lib/bn');
 var inherits = require('inherits');
 var Base = require('./base');
 
@@ -18334,7 +18334,7 @@ curve.edwards = require('./edwards');
 },{"./base":86,"./edwards":87,"./mont":89,"./short":90}],89:[function(require,module,exports){
 'use strict';
 
-var BN = require('bn.js');
+var BN = require('../../../../../node_modules/bn.js/lib/bn');
 var inherits = require('inherits');
 var Base = require('./base');
 
@@ -18515,7 +18515,7 @@ Point.prototype.getX = function getX() {
 'use strict';
 
 var utils = require('../utils');
-var BN = require('bn.js');
+var BN = require('../../../../../node_modules/bn.js/lib/bn');
 var inherits = require('inherits');
 var Base = require('./base');
 
@@ -19662,7 +19662,7 @@ defineCurve('secp256k1', {
 },{"./curve":88,"./precomputed/secp256k1":98,"./utils":99,"hash.js":120}],92:[function(require,module,exports){
 'use strict';
 
-var BN = require('bn.js');
+var BN = require('../../../../../node_modules/bn.js/lib/bn');
 var HmacDRBG = require('hmac-drbg');
 var utils = require('../utils');
 var curves = require('../curves');
@@ -19907,7 +19907,7 @@ EC.prototype.getKeyRecoveryParam = function(e, signature, Q, enc) {
 },{"../curves":91,"../utils":99,"./key":93,"./signature":94,"bn.js":100,"brorand":19,"hmac-drbg":132}],93:[function(require,module,exports){
 'use strict';
 
-var BN = require('bn.js');
+var BN = require('../../../../../node_modules/bn.js/lib/bn');
 var utils = require('../utils');
 var assert = utils.assert;
 
@@ -20030,7 +20030,7 @@ KeyPair.prototype.inspect = function inspect() {
 },{"../utils":99,"bn.js":100}],94:[function(require,module,exports){
 'use strict';
 
-var BN = require('bn.js');
+var BN = require('../../../../../node_modules/bn.js/lib/bn');
 
 var utils = require('../utils');
 var assert = utils.assert;
@@ -20415,7 +20415,7 @@ module.exports = KeyPair;
 },{"../utils":99}],97:[function(require,module,exports){
 'use strict';
 
-var BN = require('bn.js');
+var BN = require('../../../../../node_modules/bn.js/lib/bn');
 var utils = require('../utils');
 var assert = utils.assert;
 var cachedProperty = utils.cachedProperty;
@@ -21265,7 +21265,7 @@ module.exports = {
 'use strict';
 
 var utils = exports;
-var BN = require('bn.js');
+var BN = require('../../../../../node_modules/bn.js/lib/bn');
 var minAssert = require('minimalistic-assert');
 var minUtils = require('minimalistic-crypto-utils');
 
@@ -23760,7 +23760,7 @@ function fnI (a, b, c, d, m, k, s) {
 module.exports = MD5
 
 },{"hash-base":104,"inherits":134,"safe-buffer":183}],137:[function(require,module,exports){
-var bn = require('bn.js');
+var bn = require('../../../../../node_modules/bn.js/lib/bn');
 var brorand = require('brorand');
 
 function MillerRabin(rand) {
@@ -23970,7 +23970,7 @@ module.exports={"2.16.840.1.101.3.4.1.1": "aes-128-ecb",
 // Fedor, you are amazing.
 'use strict'
 
-var asn1 = require('asn1.js')
+var asn1 = require('../../../../../node_modules/asn1.js/lib/asn1')
 
 exports.certificate = require('./certificate')
 
@@ -24095,7 +24095,7 @@ exports.signature = asn1.define('signature', function () {
 
 'use strict'
 
-var asn = require('asn1.js')
+var asn = require('../../../../../node_modules/asn1.js/lib/asn1')
 
 var Time = asn.define('Time', function () {
   this.choice({
@@ -24881,7 +24881,7 @@ arguments[4][15][0].apply(exports,arguments)
 var parseKeys = require('parse-asn1')
 var mgf = require('./mgf')
 var xor = require('./xor')
-var BN = require('bn.js')
+var BN = require('../../../../../node_modules/bn.js/lib/bn')
 var crt = require('browserify-rsa')
 var createHash = require('create-hash')
 var withPublic = require('./withPublic')
@@ -24990,7 +24990,7 @@ var randomBytes = require('randombytes')
 var createHash = require('create-hash')
 var mgf = require('./mgf')
 var xor = require('./xor')
-var BN = require('bn.js')
+var BN = require('../../../../../node_modules/bn.js/lib/bn')
 var withPublic = require('./withPublic')
 var crt = require('browserify-rsa')
 var Buffer = require('safe-buffer').Buffer
@@ -25075,7 +25075,7 @@ function nonZero (len) {
 }
 
 },{"./mgf":155,"./withPublic":159,"./xor":160,"bn.js":156,"browserify-rsa":41,"create-hash":69,"parse-asn1":145,"randombytes":165,"safe-buffer":183}],159:[function(require,module,exports){
-var BN = require('bn.js')
+var BN = require('../../../../../node_modules/bn.js/lib/bn')
 var Buffer = require('safe-buffer').Buffer
 
 function withPublic (paddedMsg, key) {

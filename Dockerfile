@@ -3,7 +3,16 @@ FROM golang:alpine AS builder
 # Install git + SSL ca certificates.
 # Git is required for fetching the dependencies.
 # Ca-certificates is required to call HTTPS api.
-RUN apk update && apk add --no-cache git ca-certificates tzdata && update-ca-certificates
+RUN apk update && apk add --no-cache git ca-certificates tzdata openssl
+
+# Get certificate from "github.com"
+RUN openssl s_client -showcerts -connect github.com:443 </dev/null 2>/dev/null|openssl x509 -outform PEM > /etc/ssl/certs/github.crt
+# Get certificate from "proxy.golang.org"
+RUN openssl s_client -showcerts -connect proxy.golang.org:443 </dev/null 2>/dev/null|openssl x509 -outform PEM >  /etc/ssl/certs/proxy.golang.crt
+# Get certificate from "storage.googleapis.com"
+RUN openssl s_client -showcerts -connect storage.googleapis.com:443 </dev/null 2>/dev/null|openssl x509 -outform PEM >  /etc/ssl/certs/storage.googleapis.com.crt
+# Update certificates
+RUN update-ca-certificates
 
 # Create appuser
 ENV USER=appuser

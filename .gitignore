@@ -8,6 +8,8 @@
 api-reference-golang
 local/grafana/data
 .env
+tests/performance/node_modules
+tests/performance/package-lock.json
 
 **/*.db
 
