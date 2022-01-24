@@ -2,6 +2,7 @@ package entities
 
 import (
 	"api-reference-golang/api/utils"
+	"api-reference-golang/events/kafka"
 	"api-reference-golang/models"
 	"api-reference-golang/models/entity"
 	"encoding/json"
@@ -10,7 +11,7 @@ import (
 )
 
 var (
-	svc *entity.EntityService
+	svc entity.Repository
 )
 
 // AllEntities godoc
@@ -120,8 +121,8 @@ func DeleteEntity(c *gin.Context) {
 	}
 }
 
-func CreateRoutes(router *gin.Engine, conn *models.Connection) {
-	svc = entity.New(conn)
+func CreateRoutes(router *gin.Engine, conn *models.Connection, prod *kafka.Producer) {
+	svc = entity.New(conn, prod)
 	pv1 := router.Group("/api/v1/entities")
 	{
 		pv1.POST("/", CreateEntity)

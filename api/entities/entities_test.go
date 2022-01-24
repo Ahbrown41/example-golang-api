@@ -2,8 +2,10 @@ package entities
 
 import (
 	"api-reference-golang/api/utils"
+	"api-reference-golang/events/kafka"
 	"api-reference-golang/models"
 	"api-reference-golang/models/entity"
+	"api-reference-golang/models/notify"
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -33,7 +35,7 @@ func TestMain(m *testing.M) {
 func setup() {
 	// Open DB
 	dialect := sqlite.Open(dbName)
-	db = models.New(dialect)
+	db = notify.New(dialect)
 	err := db.Connect()
 	if err != nil {
 		log.Err(err)
@@ -41,7 +43,8 @@ func setup() {
 
 	// Create Routes
 	router = gin.Default()
-	CreateRoutes(router, db)
+	prod := kafka.New("localhost:9092", "topic-A", "producer_test")
+	CreateRoutes(router, db, prod)
 
 	// Migrate what is necessary for test
 	entity.Migrate(db.DB())

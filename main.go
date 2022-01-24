@@ -2,6 +2,7 @@ package main
 
 import (
 	"api-reference-golang/api"
+	"api-reference-golang/events/kafka"
 	"api-reference-golang/models"
 	"api-reference-golang/models/migrate"
 	"fmt"
@@ -33,6 +34,7 @@ func main() {
 	dbName := osVariable("DB_NAME", "entity")
 	dbHost := osVariable("DB_HOST", "localhost")
 	webPort := osVariable("PORT", "8080")
+	kafkaUrl := osVariable("KAFKA_URL", "localhost:9092")
 	debug, _ := strconv.ParseBool(osVariable("DEBUG", "false"))
 
 	// Setup Logging
@@ -49,18 +51,20 @@ func main() {
 
 	// Setup Database
 	dbUri := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", dbHost, username, dbName, password)
-	conn := models.New(postgres.Open(dbUri))
+	db := models.New(postgres.Open(dbUri))
 
-	err := conn.Connect()
+	err := db.Connect()
 	if err != nil {
 		log.Panic().Err(err)
 	}
-	defer conn.Disconnect()
+	defer db.Disconnect()
+	migrate.Migrate(db.DB())
 
-	migrate.Migrate(conn.DB())
+	// Setup Kafka
+	msg := kafka.New(kafkaUrl, "entity_events", "wawa/api-reference-golang", "")
 
 	// Setup Router
-	r := api.Router(conn)
+	r := api.Router(db, msg)
 	log.Printf("Starting server on the port http://0.0.0.0:XXXX...")
 	err = r.Run(fmt.Sprintf(":%s", webPort))
 	if err != nil {

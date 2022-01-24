@@ -11,8 +11,10 @@ import (
 	"time"
 )
 
-var db *models.Connection
-var svc *EntityService
+var (
+	db  *models.Connection
+	svc Repository
+)
 
 const dbName = "entity_test.db"
 
@@ -29,12 +31,15 @@ func setup() {
 	db = conn
 	db.Connect()
 
+	notifier := NewEntityNotifier("localhost:9092", "entities")
+
 	// Migrate what is necessary for test
 	db.DB().AutoMigrate(
 		Entity{},
 		EntityItem{},
 	)
-	svc = New(db)
+
+	svc = New(db, notifier)
 }
 
 func shutdown() {
@@ -92,8 +97,8 @@ func TestCreateEntityValidationError(t *testing.T) {
 		Value: 150,         //Invalid > 100
 		Date:  time.Time{}, //Invalid, empty date
 	})
-	assert.Equalf(t, entity.ID, uint(0), "Entity ID != 0")
-	assert.NotNil(t, err.Error())
+	assert.NotNil(t, err)
+	assert.Nil(t, entity, "Entity ID not nil")
 	errors := models.Errors{}
 	json.Unmarshal([]byte(err.Error()), &errors)
 	assert.Equalf(t, "*entity.Entity", errors.Struct, "Validated Struc invalid")

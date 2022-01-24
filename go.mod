@@ -5,6 +5,7 @@ go 1.13
 require (
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
+	github.com/cloudevents/sdk-go/v2 v2.6.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-playground/validator/v10 v10.10.0 // indirect
@@ -20,6 +21,7 @@ require (
 	github.com/prometheus/client_golang v1.11.0 // indirect
 	github.com/qor/validations v0.0.0-20171228122639-f364bca61b46 // indirect
 	github.com/rs/zerolog v1.26.1 // indirect
+	github.com/segmentio/kafka-go v0.4.27 // indirect
 	github.com/stretchr/testify v1.7.0
 	github.com/swaggo/files v0.0.0-20210815190702-a29dd2bc99b2
 	github.com/swaggo/gin-swagger v1.4.0
