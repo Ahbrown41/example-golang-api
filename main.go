@@ -61,7 +61,7 @@ func main() {
 	migrate.Migrate(db.DB())
 
 	// Setup Kafka
-	msg := kafka.New(kafkaUrl, "entity_events", "wawa/api-reference-golang", "")
+	msg := kafka.New(kafkaUrl, "entity_events", "example/api-reference-golang", "")
 
 	// Setup Router
 	r := api.Router(db, msg)
