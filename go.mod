@@ -13,7 +13,7 @@ require (
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mattn/go-sqlite3 v1.14.10 // indirect
 	github.com/penglongli/gin-metrics v0.1.9
-	github.com/prometheus/client_golang v1.11.0 // indirect
+	github.com/prometheus/client_golang v1.11.1 // indirect
 	github.com/rs/zerolog v1.26.1
 	github.com/segmentio/kafka-go v0.4.27
 	github.com/stretchr/testify v1.7.0
